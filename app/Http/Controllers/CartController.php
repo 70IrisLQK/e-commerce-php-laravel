@@ -24,6 +24,7 @@ class CartController extends Controller
         $data['options']['image'] = $listProducts->product_image;
         $data['options']['size'] = $listProducts->product_image;
         Cart::add($data);
+        Cart::setGlobalTax(10);
         return Redirect::to('/show-cart');
     }
 
@@ -32,5 +33,18 @@ class CartController extends Controller
         $listCategories = DB::table('tbl_category')->where('status', '1')->orderBy("id", "desc")->get();
         $listBrands = DB::table('tbl_brand')->where('status', '1')->orderBy("id", "desc")->get();
         return view('pages.cart.show_cart')->with("listCategories", $listCategories)->with("listBrands", $listBrands);
+    }
+
+    public function deleteCart($rowId)
+    {
+        Cart::update($rowId, 0);
+        return Redirect::to('/show-cart');
+    }
+    public function updateCart(Request $request)
+    {
+        $rowId = $request->rowId_cart;
+        $qty = $request->cart_quantity;
+        Cart::update($rowId, $qty);
+        return Redirect::to('/show-cart');
     }
 }

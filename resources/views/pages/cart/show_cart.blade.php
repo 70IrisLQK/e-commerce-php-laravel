@@ -41,10 +41,14 @@
                                 </td>
                                 <td class="cart_quantity">
                                     <div class="cart_quantity_button">
-                                        <a class="cart_quantity_up" href=""> + </a>
-                                        <input class="cart_quantity_input" type="text" name="quantity"
-                                            value="{{ $item->qty }}" autocomplete="off" size="2">
-                                        <a class="cart_quantity_down" href=""> - </a>
+                                        <form action="{{ url('/update-cart') }}" method="post">
+                                            {{ csrf_field() }}
+                                            <input class="cart_quantity_input" type="text" name="cart_quantity"
+                                                value="{{ $item->qty }}" autocomplete="off" size="2">
+                                            <input type="hidden" name="rowId_cart" value="{{ $item->rowId }}">
+                                            <input type="submit" value="Update" name="update_qty"
+                                                class="btn btn-default btn-sm" />
+                                        </form>
                                     </div>
                                 </td>
                                 <td class="cart_total">
@@ -56,7 +60,8 @@
                                     </p>
                                 </td>
                                 <td class="cart_delete">
-                                    <a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+                                    <a class="cart_quantity_delete" href="{{ url('delete-cart', $item->rowId) }}"><i
+                                            class="fa fa-times"></i></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -75,7 +80,7 @@
                     delivery cost.</p>
             </div>
             <div class="row">
-                <div class="col-sm-6">
+                {{-- <div class="col-sm-6">
                     <div class="chose_area">
                         <ul class="user_option">
                             <li>
@@ -128,17 +133,17 @@
                         <a class="btn btn-default update" href="">Get Quotes</a>
                         <a class="btn btn-default check_out" href="">Continue</a>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-sm-6">
                     <div class="total_area">
                         <ul>
-                            <li>Cart Sub Total <span>$59</span></li>
-                            <li>Eco Tax <span>$2</span></li>
+                            <li>Cart Sub Total <span>{{ Cart::subTotal(0, ',', '.') . ' ' . 'VND' }}</span></li>
+                            <li>Eco Tax <span>{{ Cart::tax(0, ',', '.') . ' ' . 'VND' }}</span></li>
                             <li>Shipping Cost <span>Free</span></li>
-                            <li>Total <span>$61</span></li>
+                            <li>Total <span>{{ Cart::total(0, ',', '.') . ' ' . 'VND' }}</span></li>
                         </ul>
-                        <a class="btn btn-default update" href="">Update</a>
-                        <a class="btn btn-default check_out" href="">Check Out</a>
+                        {{-- <a class="btn btn-default update" href="">Update</a> --}}
+                        <a class="btn btn-default check_out" href="{{ url('login-checkout') }}">Check Out</a>
                     </div>
                 </div>
             </div>
